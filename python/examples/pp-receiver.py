@@ -25,10 +25,15 @@ if __name__ == '__main__':
 	strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
 	# Intialize the library (must be called once before other functions).
 	strip.begin()
+	
+	#setup your OSC receiver here
 
 	print ('Press Ctrl-C to quit.')
 	while True:
 		print ('update leds')
 		for i in range(strip.numPixels()):
+			#r = oscMessage[i]
+			#g = oscMessage[i]
+			#b = oscMessage[i]
 			strip.setPixelColorRGB(i, r, g, b)
     		strip.show()
