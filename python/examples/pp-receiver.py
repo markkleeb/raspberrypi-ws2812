@@ -31,4 +31,4 @@ if __name__ == '__main__':
 		print ('update leds')
 		for i in range(strip.numPixels()):
 			strip.setPixelColor(i, r, g, b)
-    strip.show()
+    		strip.show()
