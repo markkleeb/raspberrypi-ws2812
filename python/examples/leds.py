@@ -7,7 +7,7 @@ import time, threading
 
 #------sudo pip install pyOSC------------#
 import OSC
-#from neopixel import *
+from neopixel import *
 
 # LED strip configuration:
 LED_COUNT      = 75      # Number of LED pixels.
@@ -18,10 +18,14 @@ LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
-#LED_STRIP      = ws.WS2811_STRIP_GRB   # Strip type and colour ordering
+LED_STRIP      = ws.WS2811_STRIP_GRB   # Strip type and colour ordering
 
 
-c = OSC.OSCServer(('127.0.0.1', 4000))
+
+strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+strip.begin()
+
+c = OSC.OSCServer(('192.168.2.48', 4000))
 c.addDefaultHandlers()
 
 def printing_handler(addr, tags, stuff, source):
@@ -32,7 +36,26 @@ def printing_handler(addr, tags, stuff, source):
     print "data %s" % stuff
     print "---"
 
+
+
+def update_leds(addr, tags, stuff, source):
+		
+	#print ('update leds')
+	for i in range(strip.numPixels()):
+                r = stuff[i*3+0]
+                g = stuff[i*3+1]
+                b = stuff[i*3+2]
+                #print r
+                #print g
+                #print b
+		strip.setPixelColorRGB(i, r, g, b)
+                strip.show()
+
+
+
 c.addMsgHandler("/print", printing_handler) # adding our function
+c.addMsgHandler("/leds", update_leds)
+
 
 
 # just checking which handlers we have added
