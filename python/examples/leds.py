@@ -35,7 +35,7 @@ def printing_handler(addr, tags, stuff, source):
     print "typetags %s" % tags
     print "data %s" % stuff
     print "---"
-    leds = stuff[0].split("\x")
+    leds = stuff[0].split("\\x")
     print leds
     sleep(2)
 
