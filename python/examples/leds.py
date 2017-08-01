@@ -4,7 +4,7 @@
 # Direct port of the Arduino NeoPixel library strandtest example.  Showcases
 # various animations on a strip of NeoPixels.
 import time, threading
-
+from time import sleep
 #------sudo pip install pyOSC------------#
 import OSC
 from neopixel import *
@@ -25,7 +25,7 @@ LED_STRIP      = ws.WS2811_STRIP_GRB   # Strip type and colour ordering
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
 strip.begin()
 
-c = OSC.OSCServer(('192.168.2.48', 4000))
+c = OSC.OSCServer(('192.168.0.111', 4000))
 c.addDefaultHandlers()
 
 def printing_handler(addr, tags, stuff, source):
@@ -35,6 +35,9 @@ def printing_handler(addr, tags, stuff, source):
     print "typetags %s" % tags
     print "data %s" % stuff
     print "---"
+    leds = stuff[0].split('/')
+    print leds
+    sleep(2)
 
 
 
