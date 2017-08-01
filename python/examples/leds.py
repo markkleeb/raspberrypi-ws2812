@@ -35,7 +35,7 @@ def printing_handler(addr, tags, stuff, source):
     print "typetags %s" % tags
     print "data %s" % stuff
     print "---"
-    leds = stuff[0].split('\\')
+    leds = stuff[0].encode('string-escape').split('\\x')
     print leds
     sleep(2)
 
@@ -43,11 +43,14 @@ def printing_handler(addr, tags, stuff, source):
 
 def update_leds(addr, tags, stuff, source):
 		
+    leds = stuff[0].encode('string-escape').split('\\x')
+
+
 	#print ('update leds')
 	for i in range(strip.numPixels()):
-                r = stuff[i*3+0]
-                g = stuff[i*3+1]
-                b = stuff[i*3+2]
+                r = int(leds[i*3+0], 16)
+                g = int(leds[i*3+1], 16)
+                b = int(leds[i*3+2], 16)
                 #print r
                 #print g
                 #print b
