@@ -48,14 +48,14 @@ def update_leds(addr, tags, stuff, source):
 
 	#print ('update leds')
 	for i in range(strip.numPixels()):
-                r = int(leds[i*3+0], 16)
-                g = int(leds[i*3+1], 16)
-                b = int(leds[i*3+2], 16)
+        r = int(leds[i*3+0], 16)
+        g = int(leds[i*3+1], 16)
+        b = int(leds[i*3+2], 16)
                 #print r
                 #print g
                 #print b
 		strip.setPixelColorRGB(i, r, g, b)
-                strip.show()
+    strip.show()
 
 
 
