@@ -35,8 +35,8 @@ def printing_handler(addr, tags, stuff, source):
     print "typetags %s" % tags
     print "data %s" % stuff
     print "---"
-    leds = stuff[0].encode('string-escape').split('\\x')
-    print leds
+    #leds = stuff[0].encode('string-escape').split('\\x')
+    #print leds
     sleep(2)
 
 
@@ -47,21 +47,33 @@ def update_leds(addr, tags, stuff, source):
 
 
 	#print ('update leds')
-	for i in range(strip.numPixels()):
+    for i in range(3, strip.numPixels()):
         r = int(leds[i*3+0], 16)
         g = int(leds[i*3+1], 16)
         b = int(leds[i*3+2], 16)
                 #print r
                 #print g
                 #print b
-		strip.setPixelColorRGB(i, r, g, b)
+	strip.setPixelColorRGB(i, r, g, b)
     strip.show()
 
+def updateLedsFromString(addr, tags, data, source):
+	#print data
+	d = data[0].split(",");
+	#print d
 
+	for i in range(0, strip.numPixels()):
+		#print "val "+str(i)+": "+d[i]
+		#sleep(1)
+		r = int(d[i*3])
+		g = int(d[i*3+1])
+		b = int(d[i*3+2])
+		strip.setPixelColorRGB(i, r, g, b)
+	strip.show()
 
 c.addMsgHandler("/print", printing_handler) # adding our function
 c.addMsgHandler("/leds", update_leds)
-
+c.addMsgHandler("/s", updateLedsFromString)
 
 
 # just checking which handlers we have added
