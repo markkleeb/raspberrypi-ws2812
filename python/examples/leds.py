@@ -45,7 +45,6 @@ def update_leds(addr, tags, stuff, source):
 		
     leds = stuff[0].encode('string-escape').split('\\x')
 
-
 	#print ('update leds')
     for i in range(3, strip.numPixels()):
         r = int(leds[i*3+0], 16)
@@ -62,12 +61,15 @@ def updateLedsFromString(addr, tags, data, source):
 	d = data[0].split(",");
 	#print d
 
-	for i in range(0, strip.numPixels()):
+	for i in range(0, strip.numPixels()-3):
 		#print "val "+str(i)+": "+d[i]
 		#sleep(1)
-		r = int(d[i*3])
-		g = int(d[i*3+1])
-		b = int(d[i*3+2])
+		if d[i*3]:
+			r = int(d[i*3])
+		if d[i*3+1]:
+			g = int(d[i*3+1])
+		if d[i*3+2]:
+			b = int(d[i*3+2])
 		strip.setPixelColorRGB(i, r, g, b)
 	strip.show()
 
