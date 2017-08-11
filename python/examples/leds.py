@@ -11,8 +11,8 @@ from neopixel import *
 
 # LED strip configuration:
 LED_COUNT      = 75      # Number of LED pixels.
-LED_PIN        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
-#LED_PIN        = 10      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
+LED_PIN1        = 18      # GPIO pin connected to the pixels (18 uses PWM!).
+LED_PIN2        = 23      # GPIO pin connected to the pixels (10 uses SPI /dev/spidev0.0).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
 LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
@@ -22,8 +22,11 @@ LED_STRIP      = ws.WS2811_STRIP_GRB   # Strip type and colour ordering
 
 
 
-strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
-strip.begin()
+strip1 = Adafruit_NeoPixel(LED_COUNT, LED_PIN1, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+strip2 = Adafruit_NeoPixel(LED_COUNT, LED_PIN2, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL, LED_STRIP)
+
+strip1.begin()
+strip2.begin()
 
 c = OSC.OSCServer(('192.168.0.111', 4000))
 c.addDefaultHandlers()
@@ -46,32 +49,44 @@ def update_leds(addr, tags, stuff, source):
     leds = stuff[0].encode('string-escape').split('\\x')
 
 	#print ('update leds')
-    for i in range(3, strip.numPixels()):
+    for i in range(3, strip1.numPixels()):
         r = int(leds[i*3+0], 16)
         g = int(leds[i*3+1], 16)
         b = int(leds[i*3+2], 16)
                 #print r
                 #print g
                 #print b
-	strip.setPixelColorRGB(i, r, g, b)
-    strip.show()
+	strip1.setPixelColorRGB(i, r, g, b)
+    strip2.setPizelColorRGB(i, r, g, b)
+    strip1.show()
+    strip2.show()
 
 def updateLedsFromString(addr, tags, data, source):
 	#print data
-	d = data[0].split(",");
+    d = data[0].split(",");
 	#print d
+    for i in range(0, strip1.numPixels()+strip2.numPixels()-6, 3):
+        #print "val "+str(i)+": "+d[i]
+        #sleep(1)
+        if(i < strip1.numPixels()):
+            if d[i]:
+                r1 = int(d[i])
+            if d[i+1]:
+                g1 = int(d[i+1])
+            if d[i+2]:
+                b1 = int(d[i+2])
+        else:
+            if d[i]:
+                r2 = int(d[i])
+            if d[i+1]:
+                g2 = int(d[i+1])
+            if d[i+2]:
+                b2 = int(d[i+2])
+		strip1.setPixelColorRGB(i, r1, g1, b1)
+        strip2.setPixelColorRGB(i, r2, g2, b2)
 
-	for i in range(0, strip.numPixels()-3):
-		#print "val "+str(i)+": "+d[i]
-		#sleep(1)
-		if d[i*3]:
-			r = int(d[i*3])
-		if d[i*3+1]:
-			g = int(d[i*3+1])
-		if d[i*3+2]:
-			b = int(d[i*3+2])
-		strip.setPixelColorRGB(i, r, g, b)
-	strip.show()
+	strip1.show()
+    strip2.show()
 
 c.addMsgHandler("/print", printing_handler) # adding our function
 c.addMsgHandler("/leds", update_leds)
