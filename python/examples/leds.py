@@ -67,29 +67,28 @@ def updateLedsFromString(addr, tags, data, source):
     #print d
     #sleep(1)
     
-    for i in range(0, len(d), 3):
-        #print "val "+str(i)+": "+d[i]
-        #sleep(1)
-        if(i < len(d)/2):
-            if d[i]:
-                r1 = int(d[i])
-            if d[i+1]:
-                g1 = int(d[i+1])
-            if d[i+2]:
-                b1 = int(d[i+2])
-            strip1.setPixelColorRGB(i/3,r1,g1,b1);
-            #strip2.setPixelColorRGB(i/3, r1, g1, b1);	
-        else:
-            if d[i]:
-                r2 = int(d[i])
-            if d[i+1]:
-                g2 = int(d[i+1])
-            if d[i+2]:
-                b2 = int(d[i+2])
-            strip2index = (i-len(d)/2)/3
-            #print "Strip 2 index:"
-            #print strip2index
-            strip2.setPixelColorRGB(strip2index, r2, g2, b2)
+        half = len(d)/2
+    
+    for i in range(0, half, 3):
+        if d[i]:
+            r1 = int(d[i])
+        if d[i+1]:
+            g1 = int(d[i+1])
+        if d[i+2]:
+            b1 = int(d[i+2])
+        strip1.setPixelColorRGB(i/3,r1,g1,b1);
+    #strip2.setPixelColorRGB(i/3,r1,g1,b1);
+    
+    #read second half in reverse
+    d = d[::-1]
+    for i in range(0, half, 3):
+        if d[i]:
+            b1 = int(d[i])
+        if d[i+1]:
+            g1 = int(d[i+1])
+        if d[i+2]:
+            r1 = int(d[i+2])
+        strip2.setPixelColorRGB(i/3,r1,g1,b1);
 
     strip1.show()
     strip2.show()
